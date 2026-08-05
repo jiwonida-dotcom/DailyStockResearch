@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Daily Market Research",
+  "schemaVersion": 1,
+  "description": "일간 증시 리서치 리포트 (기관 형식). 코스피·미국 지수, 보유·관심 종목 분석, Top 20 랭킹, 트레이딩 플랜. 매일 07:00 스케줄 실행 시 최신 데이터로 갱신됨."
+}
+</script>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Market Research</title>
+<style>
+  :root { color-scheme: light; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif; background:#f6f7f9; color:#1a1f2e; line-height:1.6; padding:24px; }
+  .wrap { max-width:880px; margin:0 auto; }
+  .header { background:#1a1f2e; color:#fff; border-radius:12px; padding:24px 28px; margin-bottom:16px; }
+  .header h1 { font-size:20px; font-weight:700; letter-spacing:-0.3px; }
+  .header .date { color:#9aa4b8; font-size:13px; margin-top:4px; }
+  .badge { display:inline-block; padding:3px 12px; border-radius:20px; font-size:12px; font-weight:700; margin-top:10px; background:#3d5a80; color:#fff; }
+  .basis { font-size:11px; color:#9aa4b8; margin-top:10px; }
+  .card { background:#fff; border-radius:12px; padding:20px 24px; margin-bottom:14px; border:1px solid #e6e9ef; }
+  .card h2 { font-size:14px; font-weight:700; color:#4a5568; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; border-bottom:2px solid #edf0f4; padding-bottom:8px; }
+  .card h3.sub { font-size:12px; color:#718096; font-weight:700; margin:14px 0 6px; }
+  .exec { counter-reset:e; }
+  .exec li { margin:7px 0 7px 18px; font-size:14px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; color:#718096; font-weight:600; padding:6px 8px; border-bottom:2px solid #edf0f4; white-space:nowrap; }
+  td { padding:7px 8px; border-bottom:1px solid #f0f2f6; vertical-align:top; }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+  .dn { color:#d33c3c; font-weight:600; }
+  .up { color:#1a7f4b; font-weight:600; }
+  .stock { border-left:4px solid #2b6cb0; background:#fafbfc; border-radius:8px; padding:14px 16px; margin-bottom:12px; }
+  .stock.watch { border-left-color:#a0aec0; }
+  .stock h3 { font-size:15px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .pill { font-size:11px; font-weight:700; padding:2px 10px; border-radius:12px; background:#e6eefc; color:#2b6cb0; }
+  .pill.c4 { background:#e3f4ea; color:#1a7f4b; }
+  .pill.c3 { background:#eef2f7; color:#4a5568; }
+  .pill.c2 { background:#f4ece3; color:#9b5f1f; }
+  .prob { display:flex; height:8px; border-radius:4px; overflow:hidden; margin:8px 0 4px; }
+  .p-up { background:#48a06e; } .p-flat { background:#cbd5e0; } .p-dn { background:#e06c6c; }
+  .prob-label { font-size:11px; color:#718096; }
+  .stock p { font-size:13px; color:#4a5568; margin-top:6px; }
+  .chk { font-size:12px; color:#5a6577; background:#f2f4f8; border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .counter { font-size:12px; color:#9b5f1f; background:#fdf6ec; border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .guru { font-size:12px; color:#5a6577; margin-top:6px; }
+  .note { font-size:11px; color:#718096; margin-top:8px; }
+  .footer { font-size:11px; color:#8a94a6; text-align:center; padding:12px; }
+  .trigger { background:#eef4fb; border:2px solid #8fb3dd; border-radius:8px; padding:14px 16px; font-size:14px; margin-bottom:10px; }
+  .trigger b { color:#2b5f9e; }
+  .key { background:#e9f5ee; border:1px solid #b6dcc6; border-radius:8px; padding:10px 14px; font-size:13px; margin-top:10px; }
+  .warn { background:#fdf1f1; border:1px solid #f3d2d2; border-radius:8px; padding:10px 14px; font-size:13px; margin-top:10px; }
+  p.body { font-size:13px; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <h1>Daily Market Research</h1>
+    <div class="date">2026-08-05 (수) · 보유: 삼성전자 · 삼성전기 · 현대차 | 관심: 테슬라 · 스페이스X · KODEX 코스닥150</div>
+    <span class="badge">Neutral · 오늘 행동: 관망 (트리거 미발동)</span>
+    <div class="basis">기준: 한국·미국 모두 8/4(화) 종가 · 작성 8/5 07:30 KST, 08:05 미확인 항목 추적 반영 · 확률은 보정되지 않은 AI 추정치</div>
+  </div>
+
+  <div class="card exec">
+    <h2>Executive Summary</h2>
+    <ol>
+      <li>코스피 <b class="up">6,358.95(+1.62%)</b>로 전일 -5.12%를 하루 만에 되돌렸으나, <b>반등의 주체는 반도체가 아니라 비메모리 순환매</b>였다. 삼성전자 +0.21%는 회복이 아니라 낙폭 정지다.</li>
+      <li>미국은 <b class="up">S&amp;P500·다우 동시 사상 최고</b>(7,736.52 / 54,085.88), 나스닥 +2.59%. 코스피는 여전히 미 지수를 언더퍼폼.</li>
+      <li><b>급락 트리거 미발동 + 매수 금지 신호 3종 전부 미발동</b> → 룰상 신규 대량 진입 근거 없음. 오늘 신규 트리거는 <b>6,168.18</b>.</li>
+      <li>추가 조사로 <b>현대차 하이브리드가 확인</b>됐다(7월 미국 판매 역대 최대, HEV +52.2%). 확률을 <b class="up">50/30/20으로 상향</b>하고 1차 매수 우선순위 상위를 유지한다.</li>
+      <li>남은 고비는 <b>8/6 스페이스X 락업(9.115억주) → 8/7 미 고용보고서</b>. 48시간 룰상 오늘 오전이 마지막 창이지만, <b>창이 열렸다는 사실이 집행 의무를 만들지 않는다</b>.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>1. 전일(8/4) 판단 복기</h2>
+    <p class="body"><b>채점 시계 일치 원칙 적용</b> — 1개월 시계 판단은 익일 등락률로 채점하지 않고 근거 유효성만 본다.</p>
+    <h3 class="sub">익일 채점 대상 — ✅ 4 / ❌ 1</h3>
+    <table>
+      <tr><th>판단</th><th>실제</th><th>판정</th></tr>
+      <tr><td>트리거 6,069.73, 종가 기준 판정</td><td>장중 저 6,080.25 — <b>10.52p 차로 미하회</b></td><td class="up">✅ 규칙 유효</td></tr>
+      <tr><td>"갭 방향 확인 후 집행"</td><td>+1.5% 갭업 → 장중 -2.83% → +1.62% 마감(고저차 309.15p)</td><td class="up">✅ 적중</td></tr>
+      <tr><td>R1 "완화 중, 해소 아님"</td><td>베선트 합의 임박 vs 이란 부인·트럼프 "마지막 기회"</td><td class="up">✅ 적중</td></tr>
+      <tr><td>매수 금지 3종 미발동</td><td>미발동 유지</td><td class="up">✅ 적중</td></tr>
+      <tr><td><b>한화에어로를 "R1 완화 → 하락"으로 예측</b></td><td><b class="dn">+8.81%</b></td><td class="dn">❌ 인과 모델 오류</td></tr>
+    </table>
+    <h3 class="sub">채점 보류 — 9/4 판정 예정</h3>
+    <table>
+      <tr><th>판단</th><th>현재 근거 상태</th></tr>
+      <tr><td>매수 우선순위 현대차 &gt; 삼성전자 &gt; 삼성전기</td><td>🔶 <b>근거 일부 훼손</b> — 현대차 "상대강도" 논거가 8/4 약보합으로 소멸 → 순위 재조정(§8)</td></tr>
+      <tr><td>삼성전자 상승 40% / 현대차 45% / 스페이스X 하락 50%</td><td>근거 유효 — 하루 등락으로 채점하지 않음</td></tr>
+    </table>
+    <div class="warn"><b>재발 방지 (skill 반영 완료)</b> — ① <b>리스크→종목 방향 단정 금지</b>: 한화에어로는 R1보다 유럽 재무장·수출 수주 사이클이 상위 변수였다. ② <b>확정 시행일 검색 규칙</b>: 삼성전기 MLCC 30% 인상(7/29 발표·8/1 시행)을 3거래일 누락 — 발효일이 있는 항목은 그 날짜로 검색 후에만 "미확인" 처리. ③ <b>채점 시계 일치</b>: 위 복기 구조가 그 결과물.</div>
+  </div>
+
+  <div class="card">
+    <h2>2. Market Briefing</h2>
+    <table>
+      <tr><th>지수/자산</th><th class="num">수치</th><th class="num">등락</th><th>비고</th></tr>
+      <tr><td><b>코스피</b></td><td class="num"><b>6,358.95</b></td><td class="num up"><b>+1.62%</b></td><td>+101.50p · 시가 6,351.38 · <b>장중 저 6,080.25(-2.83%)</b> · 고저차 309.15p</td></tr>
+      <tr><td><b>코스닥</b></td><td class="num"><b>780.72</b></td><td class="num up"><b>+5.88%</b></td><td>+43.37p · <b>3거래일 연속 매수 사이드카</b>(10:47)</td></tr>
+      <tr><td>S&amp;P 500</td><td class="num">7,736.52</td><td class="num up">+1.79%</td><td><b>2개월 만의 사상 최고</b></td></tr>
+      <tr><td>나스닥</td><td class="num">26,584.99</td><td class="num up">+2.59%</td><td></td></tr>
+      <tr><td>다우</td><td class="num">54,085.88</td><td class="num up">+1.71%</td><td>+907.47p · <b>첫 54,000 돌파</b></td></tr>
+      <tr><td>원/달러</td><td class="num">1,432.5원</td><td class="num dn">+2.7원</td><td>서울 주간거래 마감</td></tr>
+      <tr><td>브렌트유</td><td class="num"><b>미확정</b></td><td class="num">—</td><td>소스 4개가 $79.36~$85 충돌(§9). WTI 장중 $77 하회. <b>$105 트리거와는 무관</b></td></tr>
+      <tr><td>미 10Y</td><td class="num">4.63~4.64%</td><td class="num up">-4bp</td><td>소스 간 0.01%p 차이 병기</td></tr>
+      <tr><td>JOLTS(6월)</td><td class="num">736만</td><td class="num dn">5월 754만 →</td><td>노동수요 둔화</td></tr>
+    </table>
+    <p class="body"><b>수급</b> — 코스피 개인 <b>+1조2,124억</b> 순매수, 외국인 -6,464억·기관 -7,017억. 전일 외국인 -3조8,708억 대비 <b>매도 강도 약 1/6로 급감</b>. 코스닥은 기관이 +5,447억 순매수로 주체가 반대.<br>
+    <b>업종</b> — 건설 +8.87%, IT서비스 +5.78%, 통신 +5.56%. <b>보험(-1.52%)만 하락</b>, 상승종목비율 83%대. 한화에어로 +8.81%, 두산에너빌리티 +7.53%, LG에너지솔루션 +3.64% / 삼성생명 -3.83%, 현대모비스 -2.84%. 코스닥 시총 상위 10종목 전부 상승(리가켐바이오 +15%, 에이비엘바이오 +13%, HLB +11%, 알테오젠 +9%).<br>
+    <b>미국</b> — 호르무즈 재개방 기대 + 기술주 반등. <b>AMD는 매출 $11.5B(+50%)·DC 첫 $6B 돌파(전년 2배)·EPS $1.66(컨센 $1.55)에도 주가 -8%</b>.</p>
+    <h3 class="sub">원인-해소 매칭</h3>
+    <table>
+      <tr><th>8/3 하락 원인</th><th>현재 상태</th></tr>
+      <tr><td>지정학·유가</td><td class="up"><b>추가 완화</b> — 합의 임박 발언, 단 이란 부인 지속</td></tr>
+      <tr><td>외국인 반도체 매도</td><td class="up"><b>강도 급감(완화)</b> — 해소 아님</td></tr>
+      <tr><td>메모리 사이클 의심</td><td class="dn"><b>미해소, 단 실물 데이터는 반대 방향</b>(§5 삼성전자)</td></tr>
+    </table>
+    <div class="key">⇒ <b>8/4 반등의 실체는 반도체 회복이 아니라 비메모리 순환매다.</b> 자금은 건설·방산·원전·바이오로 이동했고, 반도체·자동차 대형주는 그 자금의 <b>공급처</b>였지 수혜처가 아니었다. 이 서술이 오늘 §5~§8 판단의 공통 전제다.</div>
+  </div>
+
+  <div class="card">
+    <h2>3. Risk Register</h2>
+    <table>
+      <tr><th>#</th><th>리스크</th><th>당일 상태</th><th>전일 대비</th></tr>
+      <tr><td>R1</td><td><b>미·이란 / 호르무즈</b></td><td>베선트 "재개방 합의 <b>오늘 또는 내일</b>". 카타르 "협상 재개 <b>합의 초안 마련 중</b>". 루비오 "진전 있으나 <b>최종 합의 없음</b>". 이란은 직접 협상 부인, <b>오만 채널만</b> 인정. 이란, 유럽국 <b>기뢰 제거 허용 검토</b>. 트럼프 "<b>마지막 기회</b>"</td><td class="up"><b>완화 추가 진전</b>. 최종 합의 부재 + 결렬 경고 → <b>"완화 중(재점화 가능)", 해소 아님</b></td></tr>
+      <tr><td>R2</td><td>관세</td><td>자동차 25%→15% <b>8/1 발효 유지</b>, 반도체 무관세</td><td>변화 없음</td></tr>
+      <tr><td>R3</td><td>빅테크 AI capex</td><td>AMD DC 2배·"2027년 재차 2배" 전망, 스페이스X AI capex <b>$15.8B</b></td><td class="up"><b>capex 축소 신호 없음</b></td></tr>
+      <tr><td>R4</td><td>한·미 금리</td><td>JOLTS 736만 둔화, 미 10Y -4bp, FOMC 7/29 동결</td><td class="up"><b>완화 방향</b>, 판정 8/7 이월</td></tr>
+      <tr><td>R5</td><td>메모리 사이클</td><td>외국인 순매도 급감, 삼전·하이닉스 강보합. <b>단 Q2 계약가 +58~63% QoQ·재고 3~5주로 실물은 타이트</b></td><td class="dn"><b>재해석 필요</b> — 하락 원인이 펀더멘털이 아닐 가능성</td></tr>
+      <tr><td>R6</td><td>극단적 변동성</td><td>코스피 고저차 <b>309.15p(약 4.9%)</b>, 코스닥 3거래일 연속 사이드카</td><td>유지 → <b>4분할 이상 원칙</b></td></tr>
+      <tr><td>R7</td><td>코리아 디커플링</td><td>코스피 +1.62% vs 나스닥 +2.59% 언더퍼폼. 코스닥은 +5.88%로 미국 압도</td><td>구조 유지, 국내 유동성은 코스닥으로</td></tr>
+      <tr><td>R8</td><td>기대치 인플레이션</td><td>AMD 호실적에 <b>-8%</b>, 스페이스X 컨센 상회에 시간외 하락</td><td class="dn"><b>신규(8/5)</b> — 보유 종목 3Q에 "컨센 상회만으로는 부족" 전제 적용</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>4. Catalysts (8/5~8/7)</h2>
+    <table>
+      <tr><th>이벤트</th><th>일정</th><th>관전 포인트</th><th>대응</th></tr>
+      <tr><td>한국 개장</td><td>8/5 09:00</td><td>순환매 지속 vs <b>AMD -8% 여파</b></td><td>트리거 미발동 → 추격 매수 금지</td></tr>
+      <tr><td>ADP · ISM 서비스</td><td>8/5 밤</td><td>8/7 전초전</td><td>관망</td></tr>
+      <tr><td><b>스페이스X 락업</b></td><td><b>8/6</b></td><td><b>9.115억주(~$109B)</b>, IPO 규모의 1.45배</td><td>소화 확인 후 진입 논의</td></tr>
+      <tr><td><b>미 7월 고용보고서</b></td><td><b>8/7 21:30 KST</b></td><td>강한 고용 → 금리 재상승</td><td><b>현대차 2차 매수 조건 판정일</b></td></tr>
+      <tr><td>호르무즈 합의</td><td>8/5~</td><td>정식 합의 vs 결렬</td><td>브렌트 $100 돌파 시 전 계획 재검토</td></tr>
+      <tr><td>현대차 RMAC 가동</td><td>8월 중</td><td>실제 가동 공표 여부</td><td>2차 매수 근거</td></tr>
+    </table>
+    <p class="note">보유 종목 자체 실적 이벤트는 이번 주 없음(삼성전자·삼성전기 7/30 완료).</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Portfolio Analysis</h2>
+
+    <div class="stock">
+      <h3>삼성전자 240,000원 (+0.21%) <span><span class="pill">보유 유지 · 신규 매수 보류</span> <span class="pill c3">Confidence 3/5</span></span></h3>
+      <div class="prob"><div class="p-up" style="width:40%"></div><div class="p-flat" style="width:30%"></div><div class="p-dn" style="width:30%"></div></div>
+      <div class="prob-label">1개월: 상승 40% · 횡보 30% · 하락 30%</div>
+      <p>2Q 영업이익 89.5조 사상 최대, HBM4 세계 최초 양산(11.7Gbps, JEDEC 대비 +46%). 8/4 상승률은 지수의 1/8 수준으로 <b>반등장 소외</b>.</p>
+      <div class="key"><b>핵심 발견</b> — 메모리 <b>Q2 계약가 +58~63% QoQ, 재고 3~5주, 리드타임 30~40주+</b>. 이 정도면 "사이클 꺾임"의 실물 근거가 없다. <b>8/3 외국인 2.7조 순매도는 펀더멘털이 아니라 밸류에이션·차익실현일 가능성</b>이 높다. 다만 7~8월 최신 고정거래가 미확인 + 수급 매도 우위이므로 확률은 유지하고 <b>Confidence 상향 여지만 기록</b>.</div>
+      <div class="chk"><b>체크리스트</b>: 메모리 재고·출하 <b>부분 확인</b>(Q2 확인, 7~8월 미확인) · HBM4 <b>확인</b> · 파운드리 <b>확인</b>(AI5 2nm 테이프아웃, 선단공정 가동률 최대) · 레인보우로보틱스 <b>부분 확인</b> · 반도체 관세 <b>확인</b> · 판가 <b>부분 확인</b></div>
+      <div class="counter">반증: AMD -8% 여파로 반도체 재차 하락 + 외국인 순매도 1조 재확대 → 상승 40→25</div>
+      <div class="guru">버핏 통과 · 달리오 <b>경고</b>(반도체 상관 최대) · 막스 <b>보류</b>(공포는 지났고 확신은 안 옴) → <b>1.5:1.5, 신규 집행 보류</b></div>
+    </div>
+
+    <div class="stock">
+      <h3>삼성전기 8/3 1,181,000원 (8/4 종가 미확인) <span><span class="pill">보유 유지 · 조정 시 매수 1순위</span> <span class="pill c4">Confidence 4/5</span></span></h3>
+      <div class="prob"><div class="p-up" style="width:45%"></div><div class="p-flat" style="width:30%"></div><div class="p-dn" style="width:25%"></div></div>
+      <div class="prob-label">1개월: 상승 45% · 횡보 30% · 하락 25%</div>
+      <p><b>MLCC 공급가 8월 출하분부터 30% 인상</b>(8/1 시행) — 판가 인상은 하반기 실적 상향의 가장 확실한 경로. <b>6월 말 BB Ratio 1.31로 코로나 이후 최고</b>. 2Q 영업이익 4,404억(+107% YoY). 8/3 급락일 +3.42%로 메모리와 분리된 수요 축을 이미 입증.</p>
+      <div class="chk"><b>체크리스트</b>: AI 서버 MLCC <b>확인</b>(30% 인상·BB 1.31) · 유리기판 <b>확인</b>(JV 글라셈 4,800억, 삼성전기 66%/동우화인켐 34%, 평택. 세종 파일럿 시제품 생산 중, <b>본격 양산 2027년 이후 — 단기 촉매 아님</b>) · 전장·로봇용 MLCC <b>부분 확인</b> · 실적 일정 <b>확인</b> · <b>판가 확인</b></div>
+      <div class="counter">반증: 인상분이 고객사 저항으로 미반영 / 3거래일 내 코스피 대비 언더퍼폼 전환 → Confidence 4→3</div>
+      <div class="guru">버핏 통과(<b>판가 결정력 = 해자의 직접 증거</b>) · 달리오 부분 완화 · 막스 조건부 통과 → <b>3자 통과, 단 추격 매수 금지</b></div>
+    </div>
+
+    <div class="stock">
+      <h3>현대차 8/4 약보합 (정확 종가 미확인) <span><span class="pill">보유 유지 · 1차 매수 최우선</span> <span class="pill c4">Confidence 4/5</span></span></h3>
+      <div class="prob"><div class="p-up" style="width:50%"></div><div class="p-flat" style="width:30%"></div><div class="p-dn" style="width:20%"></div></div>
+      <div class="prob-label">1개월: 상승 <b>50%</b> · 횡보 30% · 하락 <b>20%</b> <span class="up">(45/30/25에서 상향)</span></div>
+      <div class="key"><b>확률 상향 근거</b> — 7월 미국 판매가 현대차·기아 합산 <b>165,284대(+5.0%) 역대 최대</b>, 하이브리드 <b>43,727대(+52.2%)</b>, 현대차 단독 22,733대(+35%). 전기차는 세액공제 종료로 -40.5% 감소했으나 <b>HEV가 이를 상쇄하고도 남았다</b> — 관세 15% 흡수 여력의 직접 증거.</div>
+      <p>여기에 관세 확정(8/1 발효), RMAC 8월 가동 계획, 웨이모 6세대 탑재 아이오닉5 로보택시 양산 임박·모셔널 연말 L4, 주주환원(3년 4조 자사주 소각·분기배당 2,500원)이 더해진다. 유가 하락도 순호재.</p>
+      <div class="chk"><b>체크리스트</b>: 관세 <b>확인</b> · <b>하이브리드 확인(신규)</b> · 보스턴다이내믹스·RMAC <b>확인</b>(계획 재확인, 실제 가동 공표 대기) · 웨이모 <b>확인</b> · 주주환원 <b>확인</b> · 판가 <b>부분 확인</b><br><b>2차 매수(30%) 조건</b>: 8월 고용지표 → <b>8/7 대기</b> / RMAC 가동 → <b>공표 없음</b> ⇒ <b>미달, 8/7 재판정</b></div>
+      <div class="counter">반증: 8/7 고용보고서 급랭 / 원달러 1,400원 하회 / RMAC 8월 내 미공표 → 상승 50→35</div>
+      <div class="guru"><b>3자 통과</b> — 버핏(저PER·주주환원), 달리오(포트폴리오 내 유일한 분산 기여), 막스(로봇·자율주행 옵션가치 미컨센서스)</div>
+    </div>
+
+    <div class="stock watch">
+      <h3>테슬라 $327.35 (+1.64%) <span><span class="pill">관망</span> <span class="pill c2">Confidence 2/5</span></span></h3>
+      <div class="prob"><div class="p-up" style="width:35%"></div><div class="p-flat" style="width:30%"></div><div class="p-dn" style="width:35%"></div></div>
+      <div class="prob-label">1개월: 상승 35% · 횡보 30% · 하락 35%</div>
+      <p>Q2 생산 451,758대 / <b>인도 480,126대 사상 최대</b>, 매출 $28.24B(+26%). 그럼에도 <b>EPS $0.33으로 컨센 -38.5% 미스, 영업마진 1.4%, FCF -$1.09B</b> — 물량이 아니라 <b>마진이 문제</b>임이 확정됐다.<br>
+      로보택시는 오스틴·마이애미·올랜도·탬파 등 <b>7개 메트로로 확장</b>했으나 <b>유상 주행거리가 QoQ 정체(약 90만 마일)</b>, 무인 운영 차량은 <b>전국 21대</b>. 도시 수만 늘고 실질은 늘지 않았다. 선물 P/E 140배는 옵티머스 성공을 전제로만 정당화되는데 예측시장의 2026년 출시 확률은 <b>16%</b>.</p>
+      <div class="chk"><b>체크리스트</b>: 차량 마진 <b>확인</b>(1.4%) · <b>인도량 확인</b>(480,126대) · 옵티머스 <b>부분 확인</b>(7~8월 초기 양산 계획 유지, 개시 공표 없음) · <b>로보택시 확인</b>(7개 메트로, 성장 정체) · AI칩 <b>확인</b> · 스페이스X 합병 <b>부분 확인</b></div>
+      <div class="counter">관망 해제: 옵티머스 외부 판매용 첫 생산 카운트 공표 + 로보택시 유상 마일 반등</div>
+    </div>
+
+    <div class="stock watch">
+      <h3>스페이스X $114.5~$115.3 (소스 간 차이) <span><span class="pill">집행 보류 · 8/6 이후 재논의</span> <span class="pill c2">Confidence 2/5</span></span></h3>
+      <div class="prob"><div class="p-up" style="width:30%"></div><div class="p-flat" style="width:20%"></div><div class="p-dn" style="width:50%"></div></div>
+      <div class="prob-label">1개월: 상승 30% · 횡보 20% · 하락 50%</div>
+      <p>첫 실적: <b>매출 $7.8B</b>(컨센 $6.81B 대폭 상회, 전년 대비 거의 2배), <b>순손실 $541M</b>, <b>AI capex $15.8B</b>. 2027년 매출 목표 $15B, 스타링크 2028년 말 글로벌 D2D 로드맵. 8/4 장중 $130.99까지 급등 후 $114대로 되밀려 <b>고저차 15%</b>, 발표 후 시간외 하락. IPO 고점 $201.80 대비 <b>-43%</b>.</p>
+      <div class="chk"><b>체크리스트</b>: 스탈링크 매출 <b>확인</b> · <b>Starship 확인</b>(Flight 13 7/25 — 부스터 온타겟이나 "hard" splashdown, 상단 인도양 준궤도 홉 성공. Flight 14는 첫 궤도 비행 + 첫 Ship 캐치 목표 3Q26. GAO: 극저온 연료 관리가 최대 리스크) · 신규 상장 수급 <b>확인</b>(8/6 락업 9.115억주)</div>
+      <div class="counter">반증: 8/6 소화 실패로 $107 하회 → 논의 <b>중단</b> / 소화 후 $120 회복 → 재개</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>6. Watchlist Ranking — 수요일: 순위 변동·신규만</h2>
+    <table>
+      <tr><th>변동</th><th>종목</th><th>시장</th><th>사유</th></tr>
+      <tr><td>1위 유지</td><td><b>삼성전기</b></td><td>KR</td><td>MLCC 30% 인상 시행 + BB 1.31 — 촉매가 확정 일정으로 전환</td></tr>
+      <tr><td>2위 유지</td><td><b>현대차</b></td><td>KR</td><td>하이브리드 +52.2% 확인으로 논거 보강, 대가 3자 통과</td></tr>
+      <tr><td class="up">2위 → 3위 ▲</td><td><b>한화에어로스페이스</b></td><td>KR</td><td><b>+8.81%</b> — 전일 하락 판단 정면 반박</td></tr>
+      <tr><td>3위 유지</td><td>삼성전자</td><td>KR</td><td>반등장 소외, 단 메모리 실물 데이터는 강세</td></tr>
+      <tr><td class="up">신규 5위 ▲</td><td><b>두산에너빌리티</b></td><td>KR</td><td>+7.53%, AI 데이터센터·원전 순환매 중심</td></tr>
+      <tr><td class="dn">5위 → 6위 ▼</td><td>팔란티어</td><td>US</td><td>관심이 AMD·스페이스X로 분산</td></tr>
+      <tr><td class="up">신규 편입</td><td>AMD</td><td>US</td><td><b>R8 관측용</b> — 매수 후보 아님</td></tr>
+      <tr><td class="up">▲ 상향</td><td>효성중공업 · 건설·원전 밸류체인</td><td>KR</td><td>건설 +8.87%</td></tr>
+      <tr><td>관찰 편입</td><td>알테오젠·리가켐바이오·HLB·에이비엘바이오</td><td>KR</td><td><b>순환매 강도 지표</b>로만 관찰</td></tr>
+      <tr><td>하위 유지</td><td>레인보우로보틱스</td><td>KR</td><td>+1%대 — 코스닥 +5.88% 대비 로봇 테마 소외</td></tr>
+      <tr><td class="dn">최하위 유지</td><td><b>스페이스X</b></td><td>US</td><td>8/6 락업 이벤트 리스크 최대</td></tr>
+    </table>
+    <p class="note">나머지(NVIDIA·MSFT·아마존·현대모비스·SK하이닉스·HD현대중공업·기아·알파벳·LGES·HD한국조선해양·메타·테슬라)는 8/4 기준 유지. 현대모비스 -2.84% 하향 관찰. <b>스크리닝이며 매수 추천이 아닙니다.</b></p>
+  </div>
+
+  <div class="card">
+    <h2>7. Rebalancing Note</h2>
+    <p class="body"><b>정기 갱신일 아님. 신규 트리거 미발생.</b><br>
+    트리거 점검: ① 비중 이탈 — 보유 내역 미제공, 판정 불가 ② 급락일 동조화 — 반등으로 해소 국면 ③ <b>달리오 분산 경고 2일 연속 발생</b>.<br>
+    보유 3종 중 삼성전자·삼성전기가 <b>AI 인프라 계열</b>로 상관이 높다. 8/4 순환매는 이 계열 밖에서 발생했고 포트폴리오는 수혜를 전혀 받지 못했다. "AI capex"와 "휴머노이드"는 동일 계열이므로 <b>현재 실질 분산 축은 현대차 하나뿐</b>이다.<br>
+    → 반등이 3거래일 이상 이어지면 삼성전자 일부 축소로 계열 외 분산 축 확보를 검토. <b>오늘 실행 권고 아님</b>(급락 직후 매도성 조정 금지).</p>
+  </div>
+
+  <div class="card">
+    <h2>8. Trading Plan</h2>
+    <div class="trigger">
+      <b>트리거 (bash 검산)</b><br>
+      어제 트리거 6,069.73 → 8/4 장중 저 <b>6,080.25</b> (10.52p 차) → <b>미발동</b><br>
+      <b>오늘 신규 트리거: 6,358.95 × 0.97 = 6,168.18</b> · -5% 확대 검토선 <b>6,041.00</b><br>
+      <span style="font-size:12px">※ 판정은 <b>종가 기준</b></span>
+    </div>
+    <table>
+      <tr><th>매수 금지 신호 (상세 상태는 §3)</th><th>판정</th></tr>
+      <tr><td>중앙은행 매파 서프라이즈</td><td class="up"><b>미발동</b> (R4 완화 방향)</td></tr>
+      <tr><td>빅테크 AI capex 축소</td><td class="up"><b>미발동</b> (R3, capex는 확대)</td></tr>
+      <tr><td>브렌트유 $105+</td><td class="up"><b>미발동</b> — 단 R1 미합의로 "완화 중(재점화 가능)"</td></tr>
+    </table>
+    <p class="body"><b>3종 미발동 + 트리거 미발동 = 오늘 신규 대량 진입 근거 없음.</b></p>
+    <table style="margin-top:12px">
+      <tr><th>시점</th><th>조건</th><th>행동</th></tr>
+      <tr><td><b>8/5 장중</b></td><td>코스피 종가 <b>6,168.18 하회</b></td><td>트리거 발동 → 계획 자금 25% 이하 1차 진입 검토. 우선순위 <b>삼성전기 &gt; 현대차 &gt; 삼성전자</b></td></tr>
+      <tr><td><b>8/5 오전</b></td><td>트리거 미발동</td><td><b>관망 · 추격 매수 금지</b></td></tr>
+      <tr><td>8/6</td><td>스페이스X 락업 소화</td><td>$120 회복 시 논의 재개 / $107 하회 시 중단</td></tr>
+      <tr><td><b>8/7 21:30</b></td><td>고용지표 + RMAC 공표</td><td><b>현대차 2차 매수(30%) 최종 판정</b></td></tr>
+      <tr><td>상시</td><td>브렌트 $100 돌파</td><td>전 계획 재검토 · $105 전면 관망</td></tr>
+    </table>
+    <p class="body"><b>우선순위 변경 사유</b> — 어제 현대차를 1순위로 둔 근거는 "상대강도 + 과열도 최저"였는데 8/4 약보합으로 <b>상대강도 논거가 소멸</b>했다. 반면 삼성전기는 MLCC 30% 인상이라는 <b>실적 상향의 확정 경로</b>를 확보했다. 다만 삼성전기는 고점권이므로 <b>"조정 시" 조건부 1순위</b>이며 추격 매수는 금지. 현대차는 하이브리드 확인으로 펀더멘털 논거가 오히려 강해졌으나 8/7 이벤트 48시간 룰에 걸린다.<br>
+    <b>분할 원칙</b> — 일시금 금지, R6 활성으로 <b>4분할 이상</b>. 1차는 계획 자금 25% 이하.<br>
+    <b>대가 종합</b> — 버핏(판가 결정력 → 삼성전기) / 달리오(AI 계열 집중 경고 → 현대차가 분산에 유리) / 막스(반등 3일차 진입은 2차적 사고에 부합하지 않음 → 관망). <b>1:1:1 분열 → 룰을 최종 결정권자로 삼아 관망을 기본값으로 채택.</b></p>
+  </div>
+
+  <div class="card">
+    <h2>9. Self-Audit</h2>
+    <table>
+      <tr><th>점검 항목</th><th>결과</th></tr>
+      <tr><td>체크리스트 전 항목 표기</td><td class="up">✓ 5종목 전부(본업·비본업·판가)</td></tr>
+      <tr><td>Risk Register 전 항목 갱신</td><td class="up">✓ R1~R7 + <b>R8 신규 등재</b></td></tr>
+      <tr><td>확정 시행일 검색</td><td class="up">✓ MLCC 8/1 · 관세 8/1 · 락업 8/6 · Starship Flight 13</td></tr>
+      <tr><td>실적 일정 확인</td><td class="up">✓ 보유 종목 이번 주 없음 / 스페이스X·AMD 8/4 반영</td></tr>
+      <tr><td>트리거 bash 검산</td><td class="up">✓ 6,168.18 / 6,041.00 / 10.52p 차 미발동</td></tr>
+      <tr><td>전일 복기</td><td class="up">✓ <b>채점 시계 원칙 적용</b> — 익일 채점 5건(✅4 ❌1), 보류 4건</td></tr>
+      <tr><td>로봇·휴머노이드 테마</td><td class="up">✓ 옵티머스·RMAC·레인보우로보틱스</td></tr>
+    </table>
+    <h3 class="sub">미확인 항목 추적 — 10건 중 5 확인 / 1 부분 / 4 미확인</h3>
+    <p class="body"><b class="up">확인</b> — 테슬라 종가 $327.35 · 현대차 하이브리드 · 삼성전기 유리기판 · 테슬라 인도량·로보택시 · Starship (내용은 §5에 반영)<br>
+    <b>부분 확인</b> — 삼성전자 메모리(Q2 확인, 7~8월 최신가 미확인)</p>
+    <table style="margin-top:8px">
+      <tr><th>미확인 유지</th><th>사유</th></tr>
+      <tr><td>삼성전기 8/4 종가</td><td>검색치 456,000원이 7/29 기준(1,029,000~1,114,000원)과 모순 → <b>폐기</b></td></tr>
+      <tr><td>현대차 8/4 종가</td><td>검색된 시총 13.99조가 실제 규모와 모순 → <b>폐기</b>. "약보합"만 유효</td></tr>
+      <tr><td>브렌트 8/4 정산가</td><td>소스 4개 충돌($79.36 / $81.77 / $83.45 시가 / $85 접근). <b>$105 트리거와 무관하므로 판정 영향 없음</b></td></tr>
+      <tr><td>RMAC 실제 가동 공표</td><td>"8월 계획" 재확인만 반복 → 8/7 2차 매수 조건 <b>미충족 유지</b></td></tr>
+    </table>
+    <p class="note"><b>소스 충돌 기록</b> — 미 10Y 4.63 vs 4.64 병기 · 스페이스X 종가 $114.53 vs $115.33 범위 표기 · 브렌트 4개 충돌 · Trading Economics 네트워크 차단</p>
+  </div>
+
+  <div class="footer">본 리포트는 자문이며, 제시된 확률은 보정되지 않은 AI 추정치입니다. 투자 결정과 책임은 투자자 본인에게 있습니다.<br>daily-stock-research skill · 매일 07:00 자동 갱신 · 본 판은 2026-08-05 08:05 KST 기준</div>
+
+</div>
+</body>
+</html>
